@@ -1,0 +1,8 @@
+programa id(){ 
+                    int id, id, id; 
+                    leer id; 
+                    leer id; 
+                    id=id+id; 
+                imprimir("la suma de",id,"+",id,"=",id); 
+                terminar; 
+        } 
