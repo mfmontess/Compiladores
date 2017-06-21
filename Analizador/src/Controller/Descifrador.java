@@ -6,7 +6,7 @@ import Model.*;
 
 /**
  * Clase que permite Leer y enviar 
- * los caracteres leidos a la clase Algoritmo
+ * los caracteres leidos a la clase Automatas
  */
 public class Descifrador {  
 	
@@ -54,7 +54,7 @@ public void setTotalok(String totalok) {
 //Metodo que permite leer el archivo caracter a caracter
 public void leerArchivo() throws IOException{  
 	
-	//adiciona la tabla de simbolos y cambia su tamaño para almacenar los id resultantes
+	//adiciona la tabla de simbolos y cambia su tamaÃ±o para almacenar los id resultantes
 	totalresult = new char[0];
 	Tokens token = new Tokens();
 	tablacopia = token.verificar();
