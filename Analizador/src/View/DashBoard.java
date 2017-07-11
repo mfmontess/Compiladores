@@ -38,6 +38,7 @@ public class DashBoard extends JFrame implements ActionListener {
 	private javax.swing.JMenuItem mntmGuardar;
 	private javax.swing.JMenuItem mntmSalir;
 	private javax.swing.JMenuItem mntmAnalizar;
+	private javax.swing.JMenuItem mntmAnalisisSintactico;
 	private javax.swing.JPanel jPanel1;
 	private javax.swing.JPanel jPanel2;
 	private javax.swing.JScrollPane jScrollPane1;
@@ -118,6 +119,7 @@ public class DashBoard extends JFrame implements ActionListener {
 		mntmSalir = new javax.swing.JMenuItem();
 		jMenu2 = new javax.swing.JMenu();
 		mntmAnalizar = new javax.swing.JMenuItem();
+		mntmAnalisisSintactico = new javax.swing.JMenuItem();
 		fileChooser = new JFileChooser();
 		Tokens datos = new Tokens();
 		data = datos.verificar();
@@ -226,10 +228,14 @@ public class DashBoard extends JFrame implements ActionListener {
 		jMenuBar1.add(jMenu1);
 
 		jMenu2.setText("Analizador");
-
+		
 		mntmAnalizar.setText("Analizador Lexico");
 		mntmAnalizar.addActionListener(this);
 		jMenu2.add(mntmAnalizar);
+
+		mntmAnalisisSintactico.setText("Analizador Sintactico");
+		mntmAnalisisSintactico.addActionListener(this);
+		jMenu2.add(mntmAnalisisSintactico);
 
 		jMenuBar1.add(jMenu2);
 
@@ -262,7 +268,22 @@ public class DashBoard extends JFrame implements ActionListener {
 		if (evento.getSource() == mntmAnalizar) {
 			try {
 
-				String resul = analizarArchivo();
+				String resul = analisisLexico();
+
+				txtSalida.setText(resul);
+				textlisto = true;
+
+				TableModel model2 = new myTableModel2();
+				tblSimbolosFinales.setModel(model2);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (evento.getSource() == mntmAnalisisSintactico) {
+			try {
+
+				String resul = analisisSintactico();
 
 				txtSalida.setText(resul);
 				textlisto = true;
@@ -318,7 +339,7 @@ public class DashBoard extends JFrame implements ActionListener {
 		return texto;
 	}
 
-	public String analizarArchivo() throws IOException {
+	public String analisisLexico() throws IOException {
 		String salida = "";
 
 		// se captura la ubicacion del archivo a leer
@@ -330,6 +351,23 @@ public class DashBoard extends JFrame implements ActionListener {
 			salida = lector.getTotalok();
 			setData2(lector.getTabla());
 
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"\nNo se ha encontrado un archivo a analizar, por favor abra un archivo primero por el menú Archivo -> Abrir",
+					"ADVERTENCIA!!!", JOptionPane.WARNING_MESSAGE);
+		}
+		return salida;
+	}
+	
+	public String analisisSintactico() throws IOException {
+		String salida = "";
+
+		// se captura la ubicacion del archivo a leer
+		if (abre != null) {
+			//analisis lexico
+			salida = analisisLexico();
+			txtSalida.setText(salida);
+			textlisto = true;
 		} else {
 			JOptionPane.showMessageDialog(null,
 					"\nNo se ha encontrado un archivo a analizar, por favor abra un archivo primero por el menú Archivo -> Abrir",

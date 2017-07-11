@@ -37,7 +37,7 @@ public void setTotalok(String totalok) {
 	 fileEntrada=nFile;   
 	 abrirArchivoEntrada(); 
 	 leerArchivo();
-	 }   
+	 }
  
  //Metodo quecarga en el buffer la informacion del archivo de texto de entrada
  void abrirArchivoEntrada(){  
@@ -48,8 +48,8 @@ public void setTotalok(String totalok) {
 		 //bufferDeCadena = new StringBuffer(); 
 		 } catch (FileNotFoundException e) { 
 			 e.printStackTrace();   
-			 }     
-	 }    
+			 }
+	 }
  
 //Metodo que permite leer el archivo caracter a caracter
 public void leerArchivo() throws IOException{  
