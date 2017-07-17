@@ -25,10 +25,8 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 	 */
 	private static final long serialVersionUID = 4474157176216462060L;
 	JFileChooser fileChooser;
+	String[] columnNames = { "No Terminal", "Conjunto Primero", "Conjunto Siguiente" };
 	boolean textlisto = false;
-	String[] columnNames = { "No Terminal", "Simbolo de Entrada" };
-	Object[][] data;
-	Object[][] data2;
 	File abre;
 	private javax.swing.JLabel jLabel5;
 	private javax.swing.JLabel jLabel6;
@@ -50,10 +48,18 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 	private AnalizadorSintacticoController controlador;
 
 	public class myTableModel extends DefaultTableModel {
-		myTableModel() {
-
+		private Object[][] data;
+		
+		public myTableModel(Object[][] data, String[] columnNames) {
 			super(data, columnNames);
+		}
 
+		public Object[][] getData() {
+			return data;
+		}
+
+		public void setData2(Object[][] data) {
+			this.data = data;
 		}
 
 		public boolean isCellEditable(int row, int cols) {
@@ -63,21 +69,7 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 
 		}
 	}
-
-	public class myTableModel2 extends DefaultTableModel {
-
-		myTableModel2() {
-
-			super(getData2(), columnNames);
-
-		}
-
-		public boolean isCellEditable(int row, int cols) {
-			return false;
-			// It will make the cells of Column-1 not Editable
-
-		}
-	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -106,7 +98,9 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 		mntmReducir = new javax.swing.JMenuItem();
 		mntmTabla = new javax.swing.JMenuItem();
 		fileChooser = new JFileChooser();
-		TableModel model = new myTableModel();
+
+		Object[][] data = null;
+		TableModel model = new myTableModel(data, columnNames);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -203,10 +197,10 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 			try{
 				File gramaticas = abrirArchivo();
 				controlador = new AnalizadorSintacticoController(gramaticas);
-				importToList(controlador);
+				importData(controlador);
 			} catch(Exception e){
 				System.out.println(e.getMessage());
-			}			
+			}
 		}
 		else if (evento.getSource() == mntmTabla) {
 				if(lstGramaticas.getModel() != null){
@@ -249,21 +243,25 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 				throw new Exception("No se ha encontrado el archivo");
 		}
 		
-		public void importToList(AnalizadorSintacticoController controlador){
+		public void importData(AnalizadorSintacticoController controlador){
 			DefaultListModel<String> modelo = new DefaultListModel<String>();
 						
 			for(int i = 0; i<controlador.getAnalizador().getGramaticas().size(); i++){
 		        modelo.addElement(controlador.getAnalizador().getGramaticas().get(i).toString());
 			}
 			lstGramaticas.setModel(modelo);
+			
+			TableModel tabla = new myTableModel(controlador.getAnalizador().getTablaAnalisis(), columnNames);
+			
+			tblSimbolos.setModel(tabla);
 		}
 		
 		public void ConstruccionTablaSintactico(){
 			if (abre != null) {				
 				//Cargar Tabla
-				TableModel model2 = new myTableModel2();
-				setData2(controlador.getAnalizador().getTabla());
-				tblSimbolos.setModel(model2);
+				/*TableModel tabla = new myTableModel();
+				setData(controlador.getAnalizador().getTabla());
+				tblSimbolos.setModel(model2);*/
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"\nNo se ha encontrado un archivo a analizar, por favor abra un archivo primero por el menú Archivo -> Abrir",
@@ -296,13 +294,5 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 						JOptionPane.WARNING_MESSAGE);
 			}
 
-		}
-
-		public Object[][] getData2() {
-			return data2;
-		}
-
-		public void setData2(Object[][] data2) {
-			this.data2 = data2;
 		}
 }
