@@ -47,6 +47,7 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 	private javax.swing.JTable tblSimbolos;
 	private JList<String> lstGramaticas;
 	private javax.swing.JTextField txtArchivoEntrada;
+	private AnalizadorSintacticoController controlador;
 
 	public class myTableModel extends DefaultTableModel {
 		myTableModel() {
@@ -198,8 +199,15 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 
 	@Override
 	public void actionPerformed(ActionEvent evento) {
-		if (evento.getSource() == mntmAbrir)
-				abrirArchivo();
+		if (evento.getSource() == mntmAbrir){
+			try{
+				File gramaticas = abrirArchivo();
+				controlador = new AnalizadorSintacticoController(gramaticas);
+				importToList(controlador);
+			} catch(Exception e){
+				System.out.println(e.getMessage());
+			}			
+		}
 		else if (evento.getSource() == mntmTabla) {
 				if(lstGramaticas.getModel() != null){
 					ConstruccionTablaSintactico();
@@ -230,43 +238,31 @@ public class AnalizadorSintactico extends JFrame implements ActionListener  {
 	}
 	
 	// Metodo para abrir el documento de texto
-		public String abrirArchivo(){
-			String texto = "";
-			fileChooser.showOpenDialog(this);			
-			abre = fileChooser.getSelectedFile();// se captura la ubicacion del archivo a leer
-
+		public static File abrirArchivo() throws Exception{
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.showOpenDialog(null);
+			File abre = fileChooser.getSelectedFile();// se captura la ubicacion del archivo a leer
+			
 			if (abre != null) {
-				Archivo insumo = null;
-				try {
-					insumo = new Archivo(abre); // Se lee el archivo para mostrarse en la ventana 
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				texto = insumo.getContenido().toString();
-				importTextToList(texto);
+				return abre;
 			} else
-				JOptionPane.showMessageDialog(null, "\nNo se ha encontrado el archivo", "ADVERTENCIA!!!",
-						JOptionPane.WARNING_MESSAGE);
-			return texto;
+				throw new Exception("No se ha encontrado el archivo");
 		}
 		
-		public void importTextToList(String texto){
-			DefaultListModel<String> modelo = new DefaultListModel<String>();			
-			String[] items = texto.split("\r\n");
-			
-			for(int i = 0; i<items.length; i++){
-		        modelo.addElement(items[i]);
+		public void importToList(AnalizadorSintacticoController controlador){
+			DefaultListModel<String> modelo = new DefaultListModel<String>();
+						
+			for(int i = 0; i<controlador.getAnalizador().getGramaticas().size(); i++){
+		        modelo.addElement(controlador.getAnalizador().getGramaticas().get(i).toString());
 			}
 			lstGramaticas.setModel(modelo);
 		}
 		
 		public void ConstruccionTablaSintactico(){
-			if (abre != null) {
-				AnalizadorSintacticoController analizador = new AnalizadorSintacticoController(lstGramaticas.getModel());
-				
+			if (abre != null) {				
 				//Cargar Tabla
 				TableModel model2 = new myTableModel2();
-				setData2(analizador.getTabla());
+				setData2(controlador.getAnalizador().getTabla());
 				tblSimbolos.setModel(model2);
 			} else {
 				JOptionPane.showMessageDialog(null,

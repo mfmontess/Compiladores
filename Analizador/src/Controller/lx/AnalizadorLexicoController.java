@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 import Model.Archivo;
 
-public class AnalizadorController {	
+public class AnalizadorLexicoController {	
 
 	private Archivo insumo;
 	private Archivo salida;
@@ -27,7 +27,7 @@ public class AnalizadorController {
 		this.salida = salida;
 	}	
 
-	public AnalizadorController(){
+	public AnalizadorLexicoController(){
 	}
 
 	public Archivo cargarInsumo(File archivo){

@@ -1,27 +1,32 @@
 package Model;
 
-import java.util.ArrayList;
-
 public class Termino {
+	public static final Termino CADENA_VACIA = cadenaVacia(" ");
+	
 	private String[] valor;
-	private ArrayList<Termino> conjuntoPrimero;
-	private ArrayList<Termino> conjuntoSiguiente;
+	private Arreglo<Termino> conjuntoPrimero;
+	private Arreglo<Termino> conjuntoSiguiente;
 
 	public Termino(String valor) {
+		this.valor = new String[1];
 		this.valor[0] = valor;
-		conjuntoPrimero = new ArrayList<>();
-		conjuntoSiguiente = new ArrayList<>();
+		conjuntoPrimero = new Arreglo<>();
+		conjuntoSiguiente = new Arreglo<>();
+	}
+	
+	public String toString(){
+		return valor[0];
 	}
 
-	public ArrayList<Termino> getConjuntoPrimero() {
+	public Arreglo<Termino> getConjuntoPrimero() {
 		return conjuntoPrimero;
 	}
 
-	public void setConjuntoPrimero(Termino termino) {
+	public void AddItemConjuntoPrimero(Termino termino) {
 		this.conjuntoPrimero.add(termino);
 	}
 	
-	public void setConjuntoPrimero(ArrayList<Termino> terminos) {
+	public void AddItemsConjuntoPrimero(Arreglo<Termino> terminos) {
 		this.conjuntoPrimero.addAll(terminos);
 	}
 
@@ -33,16 +38,22 @@ public class Termino {
 		this.valor[0] = valor;
 	}
 
-	public ArrayList<Termino> getConjuntoSiguiente() {
+	public Arreglo<Termino> getConjuntoSiguiente() {
 		return conjuntoSiguiente;
 	}
 
-	public void setConjuntoSiguiente(Termino termino) {
+	public void AddItemConjuntoSiguiente(Termino termino) {
 		this.conjuntoSiguiente.add(termino);
 	}
 	
-	public void setConjuntoSiguiente(ArrayList<Termino> terminos) {
+	public void AddItemsConjuntoSiguiente(Arreglo<Termino> terminos) {
 		this.conjuntoSiguiente.addAll(terminos);
 	}
 
+	private static Termino cadenaVacia(String string) {
+		if (CADENA_VACIA != null)
+			return CADENA_VACIA;
+		else
+			return new Termino(" ");
+	}
 }
