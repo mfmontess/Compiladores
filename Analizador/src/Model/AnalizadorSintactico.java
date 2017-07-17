@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 public class AnalizadorSintactico {
 
-	private Object[][] tabla;
+	private Object[][] tablaAnalisis;
 	private Arreglo<Gramatica> gramaticas;
 	private Arreglo<Termino> noTerminales;
 	private Arreglo<Termino> simbolosEntrada;
@@ -14,31 +14,33 @@ public class AnalizadorSintactico {
 		this.gramaticas = gramaticas;
 		this.noTerminales = ObtenerNoTerminales(gramaticas);
 		this.simbolosEntrada = ObtenerSimbolosEntrada(gramaticas);
-		/*
+		
 		//Conjuntos primeros
 		ConstruirConjuntosPrimero(gramaticas);
 		
 		//Conjuntos Siguientes
 		ConjuntoSiguiente(gramaticas);
-		
+				
 		//Construir Tabla
-		this.tabla = ConstruirTabla(gramaticas);
-		*/
+		this.tablaAnalisis = ConstruirTablaAnalisis(noTerminales);
 	}
 	
-	public Object[][] getTabla() {
-		return tabla;
+	public Object[][] getTablaAnalisis() {
+		return tablaAnalisis;
 	}
 	
 	public void ConstruirConjuntosPrimero(Arreglo<Gramatica> gramaticas){
+		String nivel = "";
 		for (Gramatica g : gramaticas)  {
 			NoTerminal noTerminal = g.getNoTerminalInicial();
+			System.out.println(nivel+ noTerminal.toString());
 			int k = 0;
+			int n = g.getPoscondicion().size();
 			boolean continuar = true;
 			
-			while (continuar && k< g.getExpresion().size()){
-				Arreglo<Termino> primero = ConjuntoPrimero(g.getPoscondicion().get(k));
-				Arreglo<Termino> primeroTmp = new Arreglo<Termino>(primero); 
+			while (continuar && k < n){
+				Arreglo<Termino> primero = ConjuntoPrimero(g.getPoscondicion().get(k), nivel + "-");
+				Arreglo<Termino> primeroTmp = new Arreglo<Termino>(primero);
 				primeroTmp.remove(Termino.CADENA_VACIA);
 				
 				noTerminal.AddItemsConjuntoPrimero(primeroTmp); //si ya existe no se debe duplicar
@@ -52,15 +54,16 @@ public class AnalizadorSintactico {
 		}
 	}
 	
-	public Arreglo<Termino> ConjuntoPrimero(Termino termino){
+	public Arreglo<Termino> ConjuntoPrimero(Termino termino, String nivel){
+		System.out.println(nivel+ termino.toString());
 		Arreglo<Termino> primero = termino.getConjuntoPrimero();
 		if(noTerminales.contains(termino)){
 			for (Gramatica g : gramaticas)  {
 				if(g.getNoTerminalInicial().toString().equals(termino.toString())){
-					int k = 0;
+					int k = 0, n = g.getPoscondicion().size();
 					boolean continuar = true;
-					while (continuar && k< g.getExpresion().size()){
-						primero = ConjuntoPrimero(g.getPoscondicion().get(k));
+					while (continuar && k < n){
+						primero.addAll(ConjuntoPrimero(g.getPoscondicion().get(k), nivel + "-"));
 						Arreglo<Termino> primeroTmp = new Arreglo<Termino>(primero);
 						primeroTmp.remove(Termino.CADENA_VACIA);
 						
@@ -75,7 +78,7 @@ public class AnalizadorSintactico {
 				}
 			}
 		} else{
-			primero.add(termino);
+			//primero.add(termino);
 			termino.AddItemConjuntoPrimero(termino);
 		}
 			
@@ -123,6 +126,17 @@ public class AnalizadorSintactico {
 					}
 				}
 			}
+		}
+		return tabla;
+	}
+	
+	public Object [][] ConstruirTablaAnalisis(Arreglo<Termino> noTerminales){
+		Object [][] tabla = new Object[noTerminales.size()][3];
+		
+		for(int i = 0; i < noTerminales.size(); i++){
+			tabla[i][0] = noTerminales.get(i).toString();
+			tabla[i][1] = noTerminales.get(i).getConjuntoPrimero().toString();
+			tabla[i][2] = noTerminales.get(i).getConjuntoSiguiente().toString();
 		}
 		return tabla;
 	}

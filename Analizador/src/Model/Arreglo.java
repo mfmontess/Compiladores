@@ -32,9 +32,7 @@ public class Arreglo<E> implements Iterable<E>{
 	}
 	
 	public void addAll(Arreglo<E> arreglo){
-		for(E item : arreglo){
-			arrayList.add(item);			
-		}
+		arrayList.addAll(arreglo.arrayList);
 	}
 	
 	public int size(){

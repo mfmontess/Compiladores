@@ -23,11 +23,15 @@ public class Termino {
 	}
 
 	public void AddItemConjuntoPrimero(Termino termino) {
-		this.conjuntoPrimero.add(termino);
+		if(!this.conjuntoPrimero.contains(termino))
+			this.conjuntoPrimero.add(termino);
 	}
 	
 	public void AddItemsConjuntoPrimero(Arreglo<Termino> terminos) {
-		this.conjuntoPrimero.addAll(terminos);
+		for(Termino t : terminos){
+			if(!this.conjuntoPrimero.contains(t))
+				this.conjuntoPrimero.add(t);
+		}
 	}
 
 	public String getValor() {
