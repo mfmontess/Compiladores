@@ -78,7 +78,7 @@ public class AnalizadorSintactico {
 				}
 			}
 		} else{
-			//primero.add(termino);
+			primero.add(termino);
 			termino.AddItemConjuntoPrimero(termino);
 		}
 			
@@ -108,7 +108,7 @@ public class AnalizadorSintactico {
 			e.getValue().AddItemsConjuntoSiguiente(e.getKey().getConjuntoSiguiente());
 	}
 	
-	public Object [][] ConstruirTabla(Arreglo<Gramatica> gramaticas){
+	public Object [][] ConstruirTablaSintactico(Arreglo<Gramatica> gramaticas){
 		Object [][] tabla = new Object[noTerminales.size()][simbolosEntrada.size()];
 		
 		for(Gramatica g : gramaticas)  {
